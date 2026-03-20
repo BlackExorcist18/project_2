@@ -83,9 +83,9 @@
     <div class="container">
         <nav>
             <a href="/">Главная</a>
-            <a href="/courses/">Курсы</a>
-            <a href="/authors/">Авторы</a>
-            <a href="/info/">Информация</a>
+            <a href="courses.html">Курсы</a>
+            <a href="authors.html">Авторы</a>
+            <a href="info.html">Информация</a>
         </nav>
 
         <h1>Все курсы</h1>
@@ -99,7 +99,7 @@
                     <span>Автор: {{ course.author_name }}</span>
                     <span>Уровень: {{ course.level }}</span>
                 </div>
-                <a href="/courses/{{ course.id }}/" class="btn">Подробнее</a>
+                <a href="courses.html{{ course.id }}" class="btn">Подробнее</a>
             </div>
             {% empty %}
             <p>Курсы временно отсутствуют.</p>
