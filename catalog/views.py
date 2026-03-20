@@ -25,13 +25,21 @@ def courses(request):
 
 def course_detail(request, course_id):
     """Страница конкретного курса"""
+    # Добавим отладочную информацию
+    print(f"Looking for course with id: {course_id}")
+    print(f"Available courses: {[c['id'] for c in COURSES]}")
+    
+    # Ищем курс по id
     course = next((c for c in COURSES if c['id'] == course_id), None)
     
     if course is None:
+        print(f"Course with id {course_id} not found")
         raise Http404("Курс не найден")
     
+    # Находим автора курса
     author = next((a for a in AUTHORS if a['id'] == course['author_id']), None)
     
+    # Добавляем данные для шаблона
     course_data = course.copy()
     course_data['author_name'] = author['name'] if author else 'Неизвестный автор'
     course_data['author_id'] = author['id'] if author else 0
@@ -59,11 +67,18 @@ def authors(request):
 
 def author_detail(request, author_id):
     """Страница конкретного автора"""
+    # Добавим отладочную информацию
+    print(f"Looking for author with id: {author_id}")
+    print(f"Available authors: {[a['id'] for a in AUTHORS]}")
+    
+    # Ищем автора по id
     author = next((a for a in AUTHORS if a['id'] == author_id), None)
     
     if author is None:
+        print(f"Author with id {author_id} not found")
         raise Http404("Автор не найден")
     
+    # Находим все курсы автора
     author_courses = [c for c in COURSES if c['author_id'] == author_id]
     
     author_data = author.copy()
@@ -78,3 +93,8 @@ def author_detail(request, author_id):
 def info(request):
     """Информационная страница"""
     return render(request, 'info.html')
+
+
+def custom_404(request, exception):
+    """Кастомная страница 404"""
+    return render(request, 'not_found.html', status=404)
