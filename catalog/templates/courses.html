@@ -99,7 +99,7 @@
                     <span>Автор: {{ course.author_name }}</span>
                     <span>Уровень: {{ course.level }}</span>
                 </div>
-                <a href="courses.html{{ course.id }}" class="btn">Подробнее</a>
+                <a href="course_{{ course.id }}.html" class="btn">Подробнее</a>
             </div>
             {% empty %}
             <p>Курсы временно отсутствуют.</p>

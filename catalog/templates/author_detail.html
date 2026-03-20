@@ -90,7 +90,7 @@
 
         <div class="author-header">
             <div class="author-avatar-large">
-                {{ author.name|make_list|first }}
+                {{ author.name|slice:":1" }}
             </div>
             <div class="author-bio">
                 <h1>{{ author.name }}</h1>

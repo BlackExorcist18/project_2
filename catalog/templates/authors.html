@@ -103,7 +103,7 @@
             {% for author in authors %}
             <div class="author-card">
                 <div class="author-avatar">
-                    {{ author.name|make_list|first }}
+                    {{ author.name|slice:":1" }}
                 </div>
                 <div class="author-info">
                     <h3>{{ author.name }}</h3>
