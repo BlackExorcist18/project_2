@@ -107,7 +107,7 @@
             <div class="course-item">
                 <h3>{{ course.name }}</h3>
                 <p>{{ course.description|truncatechars:150 }}</p>
-                <a href="courses.html{{ course.id }}">Подробнее о курсе →</a>
+                <a href="course_{{ course.id }}.html">Подробнее о курсе →</a>
             </div>
             {% empty %}
             <p>У автора пока нет курсов.</p>

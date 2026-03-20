@@ -1,7 +1,5 @@
 from django.shortcuts import render
 from django.http import Http404
-
-# Здесь будут ваши константы с данными
 from .data import COURSES, AUTHORS
 
 
@@ -12,10 +10,8 @@ def index(request):
 
 def courses(request):
     """Страница со списком всех курсов"""
-    # Добавляем имя автора к каждому курсу для удобства отображения
     courses_list = []
     for course in COURSES:
-        # Находим автора курса
         author = next((a for a in AUTHORS if a['id'] == course['author_id']), None)
         course_copy = course.copy()
         course_copy['author_name'] = author['name'] if author else 'Неизвестный автор'
@@ -28,20 +24,14 @@ def courses(request):
 
 
 def course_detail(request, course_id):
-    """
-    Страница конкретного курса
-    Используется view-параметр course_id
-    """
-    # Ищем курс по id
+    """Страница конкретного курса"""
     course = next((c for c in COURSES if c['id'] == course_id), None)
     
     if course is None:
         raise Http404("Курс не найден")
     
-    # Находим автора курса
     author = next((a for a in AUTHORS if a['id'] == course['author_id']), None)
     
-    # Добавляем дополнительные данные для шаблона
     course_data = course.copy()
     course_data['author_name'] = author['name'] if author else 'Неизвестный автор'
     course_data['author_id'] = author['id'] if author else 0
@@ -54,11 +44,9 @@ def course_detail(request, course_id):
 
 def authors(request):
     """Страница со списком всех авторов"""
-    # Подсчитываем количество курсов для каждого автора
     authors_list = []
     for author in AUTHORS:
         author_copy = author.copy()
-        # Считаем количество курсов автора
         courses_count = sum(1 for c in COURSES if c['author_id'] == author['id'])
         author_copy['courses_count'] = courses_count
         authors_list.append(author_copy)
@@ -70,17 +58,12 @@ def authors(request):
 
 
 def author_detail(request, author_id):
-    """
-    Страница конкретного автора
-    Используется view-параметр author_id
-    """
-    # Ищем автора по id
+    """Страница конкретного автора"""
     author = next((a for a in AUTHORS if a['id'] == author_id), None)
     
     if author is None:
         raise Http404("Автор не найден")
     
-    # Находим все курсы автора
     author_courses = [c for c in COURSES if c['author_id'] == author_id]
     
     author_data = author.copy()
