@@ -73,15 +73,15 @@
 <body>
     <div class="container">
         <nav>
-            <a href="index.html">Главная</a>
-            <a href="courses.html">Курсы</a>
-            <a href="authors.html">Авторы</a>
-            <a href="info.html">Информация</a>
+            <a href="index">Главная</a>
+            <a href="courses">Курсы</a>
+            <a href="authors">Авторы</a>
+            <a href="info">Информация</a>
         </nav>
 
         <div class="course-header">
             <h1>{{ course.name }}</h1>
-            <p>Автор: <a href="author_{{ course.author_id }}.html">{{ course.author_name }}</a></p>
+            <p>Автор: <a href="author_{{ course.author_id }}">{{ course.author_name }}</a></p>
         </div>
 
         <div class="course-info">
@@ -113,7 +113,7 @@
             </ul>
         </div>
 
-        <a href="courses.html" class="btn-back">← Назад к списку курсов</a>
+        <a href="courses" class="btn-back">← Назад к списку курсов</a>
     </div>
 </body>
 </html>

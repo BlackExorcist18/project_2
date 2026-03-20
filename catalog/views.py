@@ -67,7 +67,7 @@ def authors(request):
 
 def author_detail(request, author_id):
     """Страница конкретного автора"""
-    # Добавим отладочную информацию
+  
     print(f"Looking for author with id: {author_id}")
     print(f"Available authors: {[a['id'] for a in AUTHORS]}")
     
