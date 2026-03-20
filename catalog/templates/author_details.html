@@ -82,10 +82,10 @@
 <body>
     <div class="container">
         <nav>
-            <a href="/">Главная</a>
-            <a href="/courses/">Курсы</a>
-            <a href="/authors/">Авторы</a>
-            <a href="/info/">Информация</a>
+            <a href="index.html">Главная</a>
+            <a href="courses.html">Курсы</a>
+            <a href="authors.html">Авторы</a>
+            <a href="info.html">Информация</a>
         </nav>
 
         <div class="author-header">
@@ -107,14 +107,14 @@
             <div class="course-item">
                 <h3>{{ course.name }}</h3>
                 <p>{{ course.description|truncatechars:150 }}</p>
-                <a href="/courses/{{ course.id }}/">Подробнее о курсе →</a>
+                <a href="courses.html{{ course.id }}">Подробнее о курсе →</a>
             </div>
             {% empty %}
             <p>У автора пока нет курсов.</p>
             {% endfor %}
         </div>
 
-        <a href="/authors/" class="btn-back">← Назад к списку авторов</a>
+        <a href="authors.html" class="btn-back">← Назад к списку авторов</a>
     </div>
 </body>
 </html>
