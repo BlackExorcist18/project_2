@@ -1,20 +1,20 @@
 from django.contrib import admin
 from .models import Teacher, TeacherInfo, Course, Student
 
-class TeacherInfoInline(admin.StackedInline):
-    model = TeacherInfo
-    can_delete = False
 
 @admin.register(Teacher)
 class TeacherAdmin(admin.ModelAdmin):
     list_display = ['id', 'last_name', 'first_name', 'email', 'level', 'is_active']
     list_filter = ['level', 'is_active', 'hire_date']
     search_fields = ['first_name', 'last_name', 'email']
-    inlines = [TeacherInfoInline]
+    # Убираем inlines - это вызывает ошибку
+
 
 @admin.register(TeacherInfo)
 class TeacherInfoAdmin(admin.ModelAdmin):
     list_display = ['id', 'experience_years', 'education', 'phone']
+    search_fields = ['education', 'phone']
+
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
@@ -22,6 +22,7 @@ class CourseAdmin(admin.ModelAdmin):
     list_filter = ['level', 'is_published', 'start_date', 'teacher']
     search_fields = ['name', 'description']
     filter_horizontal = ['students']
+
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
