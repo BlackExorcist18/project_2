@@ -19,5 +19,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('catalog.urls')),  # Важно: подключаем все маршруты из catalog
+    path('', include('catalog.urls')),
+    path('schedule/', include('schedule.urls')),  # Важно: подключаем все маршруты из catalog
 ]
