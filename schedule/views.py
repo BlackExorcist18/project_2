@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.db.models import Count, Q
 from django.contrib import messages
 from .models import Teacher, TeacherInfo, Course, Student
-
+from .forms import TeacherForm
 # ============ TEACHER CRUD ============
 
 def teacher_index(request):
@@ -17,31 +17,33 @@ def teacher_detail(request, pk):
     return render(request, 'schedule/teacher_detail.html', {'teacher': teacher})
 
 def teacher_create(request):
-    """Создание преподавателя"""
+    """Создание преподавателя (ЛР3 - с формой)"""
     if request.method == 'POST':
-        # Создаем TeacherInfo
-        info = TeacherInfo.objects.create(
-            biography=request.POST.get('biography', ''),
-            education=request.POST.get('education', ''),
-            experience_years=request.POST.get('experience_years', 0),
-            phone=request.POST.get('phone', ''),
-            address=request.POST.get('address', ''),
-            birth_date=request.POST.get('birth_date') or None,
-        )
-        
-        # Создаем Teacher
-        teacher = Teacher.objects.create(
-            first_name=request.POST['first_name'],
-            last_name=request.POST['last_name'],
-            email=request.POST['email'],
-            level=request.POST['level'],
-            info=info,
-            is_active=request.POST.get('is_active', 'on') == 'on'
-        )
-        messages.success(request, f'Преподаватель {teacher.full_name} успешно создан!')
-        return redirect('schedule:teacher_detail', pk=teacher.id)
+        form = TeacherForm(request.POST)
+        if form.is_valid():
+            # Создаем TeacherInfo
+            info = TeacherInfo.objects.create(
+                biography=form.cleaned_data.get('biography', ''),
+                education=form.cleaned_data.get('education', ''),
+                experience_years=form.cleaned_data.get('experience_years', 0),
+            )
+            
+            # Создаем Teacher
+            teacher = Teacher.objects.create(
+                first_name=form.cleaned_data['first_name'],
+                last_name=form.cleaned_data['last_name'],
+                email=form.cleaned_data['email'],
+                level=form.cleaned_data['level'],
+                info=info,
+                is_active=form.cleaned_data.get('is_active', False)
+            )
+            messages.success(request, f'Преподаватель {teacher.full_name} успешно создан!')
+            return redirect('schedule:teacher_detail', pk=teacher.id)
+    else:
+        form = TeacherForm()
     
-    return render(request, 'schedule/teacher_form.html')
+    return render(request, 'schedule/teacher_form_lr3.html', {'form': form})
+
 
 def teacher_update(request, pk):
     """Обновление преподавателя"""
