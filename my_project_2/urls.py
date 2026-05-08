@@ -2,14 +2,19 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('catalog.urls')),
-    path('schedule/', include('schedule.urls')),  # маршруты schedule
-    path('', include('users.urls')),  # маршруты пользователей (регистрация, профиль, друзья)
+    path('schedule/', include('schedule.urls')),
+    path('', include('users.urls')),
+    
+    # Глобальные ссылки для login/logout (чтобы не писать users: каждый раз)
+    path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('register/', include('users.urls')),  # register уже есть в users.urls
 ]
 
-# Для отображения аватарок в режиме разработки
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

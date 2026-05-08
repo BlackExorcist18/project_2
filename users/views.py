@@ -22,7 +22,7 @@ def register(request):
             # Успешная регистрация → INFO
             logger.info(f"Successful registration: User '{user.username}' registered")
             messages.success(request, f'Добро пожаловать, {user.username}!')
-            return redirect('profile')
+            return redirect('users:profile')
         else:
             # Ошибки валидации → WARNING
             logger.warning(f"Registration failed for {request.POST.get('username', 'unknown')}: {form.errors}")

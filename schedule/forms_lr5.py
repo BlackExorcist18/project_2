@@ -8,7 +8,7 @@ from .validators import (
 )
 
 
-# ========== ModelForm для Teacher ==========
+
 class TeacherModelForm(forms.ModelForm):
     """ModelForm для преподавателя с кастомной валидацией"""
     
@@ -48,7 +48,7 @@ class TeacherModelForm(forms.ModelForm):
         return cleaned_data
 
 
-# ========== ModelForm для TeacherInfo ==========
+
 class TeacherInfoModelForm(forms.ModelForm):
     """ModelForm для дополнительной информации о преподавателе"""
     
@@ -78,7 +78,7 @@ class TeacherInfoModelForm(forms.ModelForm):
         return birth_date
 
 
-# ========== ModelForm для Course ==========
+
 class CourseModelForm(forms.ModelForm):
     """ModelForm для курса"""
     
@@ -139,7 +139,6 @@ class CourseModelForm(forms.ModelForm):
         return cleaned_data
 
 
-# ========== ModelForm для Student ==========
 class StudentModelForm(forms.ModelForm):
     """ModelForm для студента"""
     
