@@ -44,7 +44,17 @@ class Teacher(models.Model):
         null=True,
         blank=True
     )
-    
+    rating = models.DecimalField(
+        max_digits=3, decimal_places=2, 
+        default=0, null=True, blank=True,
+        verbose_name="Рейтинг",
+        help_text="Рейтинг от 0 до 5"
+    )
+    hire_date = models.DateField(
+        verbose_name="Дата найма",
+        auto_now_add=True  # уже должно быть
+    )
+
     class Meta:
         verbose_name = "Преподаватель"
         verbose_name_plural = "Преподаватели"
@@ -88,7 +98,17 @@ class Course(models.Model):
         verbose_name="Преподаватель",
         related_name='courses'
     )
-    
+    max_students = models.PositiveIntegerField(
+        default=30,
+        verbose_name="Максимум студентов",
+        help_text="Максимальное количество студентов на курсе"
+    )
+    language = models.CharField(
+        max_length=50, 
+        default="Русский",
+        verbose_name="Язык преподавания"
+    )
+
     class Meta:
         verbose_name = "Курс"
         verbose_name_plural = "Курсы"
@@ -124,6 +144,16 @@ class Student(models.Model):
         verbose_name="Курсы",
         blank=True,
         related_name='students'
+    )
+    github = models.URLField(
+        blank=True, null=True,
+        verbose_name="GitHub",
+        help_text="Ссылка на GitHub профиль"
+    )
+    average_grade = models.DecimalField(
+        max_digits=4, decimal_places=2,
+        default=0, null=True, blank=True,
+        verbose_name="Средний балл"
     )
     
     class Meta:

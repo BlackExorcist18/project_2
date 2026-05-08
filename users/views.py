@@ -1,43 +1,60 @@
+import logging
+from django.core.exceptions import ValidationError
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.urls import reverse
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 
 User = get_user_model()
 
+# Создаём логгер для модуля users (ЛР6)
+logger = logging.getLogger(__name__)
+
 
 def register(request):
-    """Регистрация пользователя"""
+    """Регистрация пользователя с логированием (ЛР6)"""
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
-            login(request, user)  # Автоматический вход после регистрации
+            login(request, user)
+            # Успешная регистрация → INFO
+            logger.info(f"Successful registration: User '{user.username}' registered")
             messages.success(request, f'Добро пожаловать, {user.username}!')
             return redirect('profile')
+        else:
+            # Ошибки валидации → WARNING
+            logger.warning(f"Registration failed for {request.POST.get('username', 'unknown')}: {form.errors}")
     else:
         form = CustomUserCreationForm()
     
     return render(request, 'users/register.html', {'form': form})
 
 
-@login_required
-def profile(request):
-    """Страница профиля пользователя"""
-    return render(request, 'users/profile.html', {'user': request.user})
+def user_login(request):
+    """Логирование входа (используется стандартный LoginView, но можно добавить через сигнал)"""
+    # Логирование будет через сигнал (см. ниже)
+    pass
 
 
 @login_required
 def profile_edit(request):
-    """Редактирование профиля"""
+    """Редактирование профиля с обработкой ошибок изображения (ЛР6)"""
     if request.method == 'POST':
         form = CustomUserChangeForm(request.POST, request.FILES, instance=request.user)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Профиль успешно обновлен!')
-            return redirect('profile')
+        try:
+            if form.is_valid():
+                form.save()
+                logger.info(f"Profile updated successfully for user '{request.user.username}'")
+                messages.success(request, 'Профиль успешно обновлен!')
+                return redirect('profile')
+            else:
+                logger.warning(f"Profile update validation failed for {request.user.username}: {form.errors}")
+        except Exception as e:
+            # Логирование ошибки с exc_info=True (ЛР6)
+            logger.error(f"Error updating profile for {request.user.username}: {str(e)}", exc_info=True)
+            messages.error(request, f'Ошибка при обновлении профиля: {str(e)}')
     else:
         form = CustomUserChangeForm(instance=request.user)
     
@@ -45,8 +62,38 @@ def profile_edit(request):
 
 
 @login_required
+def add_friend(request, pk):
+    """Добавление друга с логированием (ЛР6)"""
+    friend = get_object_or_404(User, pk=pk)
+    if request.user.add_friend(friend):
+        logger.info(f"User '{request.user.username}' added friend '{friend.username}'")
+        messages.success(request, f'{friend.username} добавлен в друзья!')
+    else:
+        logger.warning(f"User '{request.user.username}' failed to add friend '{friend.username}'")
+        messages.warning(request, 'Не удалось добавить в друзья')
+    return redirect('user_detail', pk=pk)
+
+
+@login_required
+def remove_friend(request, pk):
+    """Удаление друга с логированием (ЛР6)"""
+    friend = get_object_or_404(User, pk=pk)
+    if request.user.remove_friend(friend):
+        logger.info(f"User '{request.user.username}' removed friend '{friend.username}'")
+        messages.success(request, f'{friend.username} удален из друзей!')
+    else:
+        logger.warning(f"User '{request.user.username}' failed to remove friend '{friend.username}'")
+        messages.warning(request, 'Не удалось удалить из друзей')
+    return redirect('user_detail', pk=pk)
+@login_required
+def profile(request):
+    """Страница профиля пользователя"""
+    return render(request, 'users/profile.html', {'user': request.user})
+
+
+@login_required
 def user_list(request):
-    """Список всех пользователей (для соцсети)"""
+    """Список всех пользователей (для добавления в друзья)"""
     users = User.objects.exclude(id=request.user.id)
     return render(request, 'users/user_list.html', {'users': users})
 
@@ -54,31 +101,11 @@ def user_list(request):
 @login_required
 def user_detail(request, pk):
     """Страница другого пользователя"""
-    other_user = get_object_or_404(User, pk=pk)
+    viewed_user = get_object_or_404(User, pk=pk)
     
-    # Проверка: можно ли смотреть страницу
-    if not request.user.is_friend(other_user) and request.user != other_user:
+    # Проверка: можно ли смотреть страницу незнакомца
+    if not request.user.is_friend(viewed_user) and request.user != viewed_user:
         messages.error(request, 'Вы можете просматривать только страницы своих друзей!')
         return redirect('user_list')
     
-    return render(request, 'users/user_detail.html', {'viewed_user': other_user})
-
-
-@login_required
-def add_friend(request, pk):
-    """Добавление в друзья"""
-    friend = get_object_or_404(User, pk=pk)
-    if request.user.add_friend(friend):
-        messages.success(request, f'{friend.username} добавлен в друзья!')
-    else:
-        messages.warning(request, 'Не удалось добавить в друзья')
-    return redirect('user_detail', pk=pk)
-
-
-@login_required
-def remove_friend(request, pk):
-    """Удаление из друзей"""
-    friend = get_object_or_404(User, pk=pk)
-    if request.user.remove_friend(friend):
-        messages.success(request, f'{friend.username} удален из друзей!')
-    return redirect('user_detail', pk=pk)
+    return render(request, 'users/user_detail.html', {'viewed_user': viewed_user})

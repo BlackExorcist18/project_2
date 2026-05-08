@@ -4,6 +4,10 @@ from django.db.models import Count, Q
 from django.contrib import messages
 from .models import Teacher, TeacherInfo, Course, Student
 from .forms import TeacherForm
+from .forms_lr5 import (
+    TeacherModelForm, TeacherInfoModelForm, 
+    CourseModelForm, StudentModelForm
+)
 # ============ TEACHER CRUD ============
 
 def teacher_index(request):
@@ -16,34 +20,27 @@ def teacher_detail(request, pk):
     teacher = get_object_or_404(Teacher, pk=pk)
     return render(request, 'schedule/teacher_detail.html', {'teacher': teacher})
 
-def teacher_create(request):
-    """Создание преподавателя (ЛР3 - с формой)"""
+def teacher_create_lr5(request):
+    """Создание преподавателя с использованием ModelForm"""
     if request.method == 'POST':
-        form = TeacherForm(request.POST)
-        if form.is_valid():
-            # Создаем TeacherInfo
-            info = TeacherInfo.objects.create(
-                biography=form.cleaned_data.get('biography', ''),
-                education=form.cleaned_data.get('education', ''),
-                experience_years=form.cleaned_data.get('experience_years', 0),
-            )
-            
-            # Создаем Teacher
-            teacher = Teacher.objects.create(
-                first_name=form.cleaned_data['first_name'],
-                last_name=form.cleaned_data['last_name'],
-                email=form.cleaned_data['email'],
-                level=form.cleaned_data['level'],
-                info=info,
-                is_active=form.cleaned_data.get('is_active', False)
-            )
+        form = TeacherModelForm(request.POST)
+        info_form = TeacherInfoModelForm(request.POST)
+        
+        if form.is_valid() and info_form.is_valid():
+            teacher = form.save(commit=False)
+            info = info_form.save()
+            teacher.info = info
+            teacher.save()
             messages.success(request, f'Преподаватель {teacher.full_name} успешно создан!')
             return redirect('schedule:teacher_detail', pk=teacher.id)
     else:
-        form = TeacherForm()
+        form = TeacherModelForm()
+        info_form = TeacherInfoModelForm()
     
-    return render(request, 'schedule/teacher_form_lr3.html', {'form': form})
-
+    return render(request, 'schedule/teacher_form_lr5.html', {
+        'form': form,
+        'info_form': info_form
+    })
 
 def teacher_update(request, pk):
     """Обновление преподавателя"""
@@ -106,24 +103,22 @@ def course_detail(request, pk):
     course = get_object_or_404(Course, pk=pk)
     return render(request, 'schedule/course_detail.html', {'course': course})
 
-def course_create(request):
-    """Создание курса с выбором преподавателя"""
+def course_create_lr5(request):
+    """Создание курса с использованием ModelForm"""
     if request.method == 'POST':
-        course = Course.objects.create(
-            name=request.POST['name'],
-            description=request.POST['description'],
-            level=request.POST['level'],
-            duration_weeks=request.POST['duration_weeks'],
-            price=request.POST['price'],
-            start_date=request.POST['start_date'],
-            teacher_id=request.POST.get('teacher_id') or None,
-            is_published=request.POST.get('is_published', 'on') == 'on'
-        )
-        messages.success(request, f'Курс "{course.name}" успешно создан!')
-        return redirect('schedule:course_detail', pk=course.id)
+        form = CourseModelForm(request.POST)
+        if form.is_valid():
+            course = form.save()
+            messages.success(request, f'Курс "{course.name}" успешно создан!')
+            return redirect('schedule:course_detail', pk=course.id)
+    else:
+        form = CourseModelForm()
     
     teachers = Teacher.objects.filter(is_active=True)
-    return render(request, 'schedule/course_form.html', {'teachers': teachers})
+    return render(request, 'schedule/course_form_lr5.html', {
+        'form': form,
+        'teachers': teachers
+    })
 
 def course_update(request, pk):
     """Обновление курса"""
@@ -177,28 +172,27 @@ def student_detail(request, pk):
         'available_courses': available_courses
     })
 
-def student_create(request):
-    """Создание студента"""
+def student_create_lr5(request):
+    """Создание студента с использованием ModelForm"""
     if request.method == 'POST':
-        student = Student.objects.create(
-            first_name=request.POST['first_name'],
-            last_name=request.POST['last_name'],
-            email=request.POST['email'],
-            phone=request.POST.get('phone', ''),
-            birth_date=request.POST.get('birth_date') or None,
-            gender=request.POST.get('gender', ''),
-            is_active=request.POST.get('is_active', 'on') == 'on'
-        )
-        
-        # Добавление выбранных курсов
-        course_ids = request.POST.getlist('courses')
-        student.courses.set(course_ids)
-        
-        messages.success(request, f'Студент {student.full_name} успешно создан!')
-        return redirect('schedule:student_detail', pk=student.id)
+        form = StudentModelForm(request.POST)
+        if form.is_valid():
+            student = form.save()
+            
+            # Добавление выбранных курсов
+            course_ids = request.POST.getlist('courses')
+            student.courses.set(course_ids)
+            
+            messages.success(request, f'Студент {student.full_name} успешно создан!')
+            return redirect('schedule:student_detail', pk=student.id)
+    else:
+        form = StudentModelForm()
     
     courses = Course.objects.filter(is_published=True)
-    return render(request, 'schedule/student_form.html', {'courses': courses})
+    return render(request, 'schedule/student_form_lr5.html', {
+        'form': form,
+        'courses': courses
+    })
 
 def student_update(request, pk):
     """Обновление студента"""
