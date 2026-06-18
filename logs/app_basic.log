@@ -451,3 +451,65 @@ Traceback (most recent call last):
   File "C:\Users\Exorcist_13\Desktop\Учёба\LoP_6\project_2\.venv\lib\site-packages\django\urls\base.py", line 82, in reverse
     raise NoReverseMatch("%s is not a registered namespace" % key)
 django.urls.exceptions.NoReverseMatch: 'user' is not a registered namespace
+2026-05-15 16:35:24,301 - INFO - Watching for file changes with StatReloader
+2026-05-15 16:35:28,974 - WARNING - Not Found: /favicon.ico
+2026-05-15 16:37:00,154 - ERROR - Internal Server Error: /schedule/students/create/
+Traceback (most recent call last):
+  File "C:\Users\Exorcist_13\Desktop\work\LoP_6\project_2\.venv\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Exorcist_13\Desktop\work\LoP_6\project_2\.venv\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Exorcist_13\Desktop\work\LoP_6\project_2\schedule\views.py", line 192, in student_create_lr5
+    return render(request, 'schedule/student_form_lr5.html', {
+  File "C:\Users\Exorcist_13\Desktop\work\LoP_6\project_2\.venv\lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\Exorcist_13\Desktop\work\LoP_6\project_2\.venv\lib\site-packages\django\template\loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+  File "C:\Users\Exorcist_13\Desktop\work\LoP_6\project_2\.venv\lib\site-packages\django\template\loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: schedule/student_form_lr5.html
+2026-05-15 16:38:36,628 - ERROR - Internal Server Error: /users/3/add_friend/
+Traceback (most recent call last):
+  File "C:\Users\Exorcist_13\Desktop\work\LoP_6\project_2\.venv\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Exorcist_13\Desktop\work\LoP_6\project_2\.venv\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Exorcist_13\Desktop\work\LoP_6\project_2\.venv\lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\Exorcist_13\Desktop\work\LoP_6\project_2\users\views.py", line 74, in add_friend
+    return redirect('user_detail', pk=pk)
+  File "C:\Users\Exorcist_13\Desktop\work\LoP_6\project_2\.venv\lib\site-packages\django\shortcuts.py", line 48, in redirect
+    return redirect_class(resolve_url(to, *args, **kwargs))
+  File "C:\Users\Exorcist_13\Desktop\work\LoP_6\project_2\.venv\lib\site-packages\django\shortcuts.py", line 145, in resolve_url
+    return reverse(to, args=args, kwargs=kwargs)
+  File "C:\Users\Exorcist_13\Desktop\work\LoP_6\project_2\.venv\lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "C:\Users\Exorcist_13\Desktop\work\LoP_6\project_2\.venv\lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'user_detail' not found. 'user_detail' is not a valid view function or pattern name.
+2026-05-15 16:40:58,085 - INFO - C:\Users\Exorcist_13\Desktop\work\LoP_6\project_2\users\views.py changed, reloading.
+2026-05-15 16:40:58,577 - INFO - Watching for file changes with StatReloader
+2026-05-15 16:43:37,560 - INFO - C:\Users\Exorcist_13\Desktop\work\LoP_6\project_2\users\views.py changed, reloading.
+2026-05-15 16:43:38,025 - INFO - Watching for file changes with StatReloader
+2026-05-15 17:10:14,219 - ERROR - Internal Server Error: /users/2/
+Traceback (most recent call last):
+  File "C:\Users\Exorcist_13\Desktop\work\LoP_6\project_2\.venv\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Exorcist_13\Desktop\work\LoP_6\project_2\.venv\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Exorcist_13\Desktop\work\LoP_6\project_2\.venv\lib\site-packages\django\contrib\auth\decorators.py", line 23, in _wrapper_view
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\Exorcist_13\Desktop\work\LoP_6\project_2\users\views.py", line 109, in user_detail
+    return redirect('user_list')
+  File "C:\Users\Exorcist_13\Desktop\work\LoP_6\project_2\.venv\lib\site-packages\django\shortcuts.py", line 48, in redirect
+    return redirect_class(resolve_url(to, *args, **kwargs))
+  File "C:\Users\Exorcist_13\Desktop\work\LoP_6\project_2\.venv\lib\site-packages\django\shortcuts.py", line 145, in resolve_url
+    return reverse(to, args=args, kwargs=kwargs)
+  File "C:\Users\Exorcist_13\Desktop\work\LoP_6\project_2\.venv\lib\site-packages\django\urls\base.py", line 88, in reverse
+    return resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "C:\Users\Exorcist_13\Desktop\work\LoP_6\project_2\.venv\lib\site-packages\django\urls\resolvers.py", line 828, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'user_list' not found. 'user_list' is not a valid view function or pattern name.
+2026-05-15 17:11:00,033 - INFO - C:\Users\Exorcist_13\Desktop\work\LoP_6\project_2\users\views.py changed, reloading.
+2026-05-15 17:11:01,015 - INFO - Watching for file changes with StatReloader
+2026-05-16 09:16:34,591 - INFO - Watching for file changes with StatReloader

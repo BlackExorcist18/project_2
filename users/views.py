@@ -48,7 +48,7 @@ def profile_edit(request):
                 form.save()
                 logger.info(f"Profile updated successfully for user '{request.user.username}'")
                 messages.success(request, 'Профиль успешно обновлен!')
-                return redirect('profile')
+                return redirect('users:profile')
             else:
                 logger.warning(f"Profile update validation failed for {request.user.username}: {form.errors}")
         except Exception as e:
@@ -71,7 +71,7 @@ def add_friend(request, pk):
     else:
         logger.warning(f"User '{request.user.username}' failed to add friend '{friend.username}'")
         messages.warning(request, 'Не удалось добавить в друзья')
-    return redirect('user_detail', pk=pk)
+    return redirect('users:user_detail', pk=pk)
 
 
 @login_required
@@ -84,7 +84,7 @@ def remove_friend(request, pk):
     else:
         logger.warning(f"User '{request.user.username}' failed to remove friend '{friend.username}'")
         messages.warning(request, 'Не удалось удалить из друзей')
-    return redirect('user_detail', pk=pk)
+    return redirect('users:user_detail', pk=pk)
 @login_required
 def profile(request):
     """Страница профиля пользователя"""
@@ -106,6 +106,6 @@ def user_detail(request, pk):
     # Проверка: можно ли смотреть страницу незнакомца
     if not request.user.is_friend(viewed_user) and request.user != viewed_user:
         messages.error(request, 'Вы можете просматривать только страницы своих друзей!')
-        return redirect('user_list')
+        return redirect('users:user_list')
     
     return render(request, 'users/user_detail.html', {'viewed_user': viewed_user})
